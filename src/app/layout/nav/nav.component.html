@@ -1,13 +1,15 @@
 <header class="header">
-  <div class="header__logo-container"></div>
-  <nav class="header__nav">
-    <a class="nav__item">Home</a>
-    <a class="nav__item">Projects</a>
-    <a class="nav__item">About</a>
-  </nav>
-  <div class="header__social">
-    <a *ngFor="let link of socialLinks" [href]="link.href" target="_blank" [class]="link.css">
-      <img [src]="link.img.src" [alt]="link.img.alt" [class]="link.img.css">
-    </a>
+  <div class="header-content">
+    <div class="logo-container"></div>
+    <nav class="nav">
+      <a class="nav__item">Home</a>
+      <a class="nav__item">Projects</a>
+      <a class="nav__item">About</a>
+    </nav>
+    <div class="social">
+      <a *ngFor="let link of socialLinks" [href]="link.href" target="_blank" [class]="link.css">
+        <img [src]="link.img.src" [alt]="link.img.alt" [class]="link.img.css">
+      </a>
+    </div>
   </div>
 </header>

@@ -1,57 +1,54 @@
 .header {
-  position: relative;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
   background-color: #1A1A1A;
+}
+
+.header-content {
+  position: relative;
   display: grid;
   grid-template-columns: 100px auto 100px;
   grid-template-rows: 24px auto;
   grid-row-gap: 5px;
   padding: 5px;
-  &__logo-container {
-    grid-column: 1 / span 1;
-    grid-row: 1 / span 2;
-  }
-  &__nav {
-    position: relative;
-    grid-column: 2 / span 2;
-    grid-row: 2 / span 1;
-    display: flex;
-    justify-content: flex-end;
-  }
-  &__social {
-    grid-column: 3 / span 1;
-    grid-row: 1 / span 1;
-    display: flex;
-    justify-content: space-evenly;
+}
+
+.logo-container {
+  grid-column: 1 / span 1;
+  grid-row: 1 / span 2;
+}
+
+.nav {
+  position: relative;
+  grid-column: 2 / span 2;
+  grid-row: 2 / span 1;
+  display: flex;
+  justify-content: flex-end;
+  &__item {
+    width: 100px;
+    height: 30px;
+    text-align: center;
+    color: white;
+    cursor: pointer;
+    &:hover {
+      background-color: #0077B5;
+    }
   }
 }
 
-.nav__item {
-  width: 100px;
-  height: 30px;
-  text-align: center;
-  color: white;
-  cursor: pointer;
-  &:hover {
+.social {
+  grid-column: 3 / span 1;
+  grid-row: 1 / span 1;
+  display: flex;
+  justify-content: space-evenly;
+  &__icon {
+    filter: invert(100%);
+    width: 24px;
+    height: 24px;
+    padding: 2px;
+  }
+  &__github:hover, &__linkedin:hover, &__twitter:hover {
     background-color: #0077B5;
   }
 }
-
-.social__icon {
-  filter: invert(100%);
-  width: 24px;
-  height: 24px;
-  padding: 2px;
-}
-
-.social__github:hover {
-  background-color: #0077B5;
-}
-
-.social__linkedin:hover {
-  background-color: #0077B5;
-}
-
-.social__twitter:hover {
-  background-color: #0077B5;
-}
-
