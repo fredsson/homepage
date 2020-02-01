@@ -1,0 +1,5 @@
+<div>
+  <div *ngFor="let activity of t | async">
+    {{activity.type}} - {{activity.created_at | date}}
+  </div>
+</div>
