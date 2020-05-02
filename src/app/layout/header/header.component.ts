@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-nav',
-  templateUrl: './nav.component.html',
-  styleUrls: ['./nav.component.less']
+  selector: 'app-header',
+  templateUrl: './header.component.html',
+  styleUrls: ['./header.component.less']
 })
-export class NavComponent implements OnInit {
+export class HeaderComponent {
 
   public socialLinks = [
     {
@@ -24,10 +24,4 @@ export class NavComponent implements OnInit {
       css: "social__twitter"
     }
   ];
-
-  constructor() { }
-
-  ngOnInit() {
-  }
-
 }

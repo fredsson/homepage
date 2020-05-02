@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { NavComponent } from './layout/nav/nav.component';
+import { HeaderComponent } from './layout/header/header.component';
 import { FooterComponent } from './layout/footer/footer.component';
 import { ContentComponent } from './layout/content/content.component';
 import { AppComponent } from './app/app.component';
@@ -11,7 +11,7 @@ import { HomeModule } from './modules/home/home.module';
 import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
-  declarations: [AppComponent, NavComponent, FooterComponent, ContentComponent],
+  declarations: [AppComponent, HeaderComponent, FooterComponent, ContentComponent],
   imports: [
     BrowserModule,
     HttpClientModule,
