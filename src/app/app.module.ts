@@ -7,8 +7,8 @@ import { AppComponent } from './app/app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { SharedModule } from './shared/shared.module';
 import { CoreModule } from './core/core.module';
-import { HomeModule } from './modules/home/home.module';
 import { HttpClientModule } from '@angular/common/http';
+import { HomeModule } from './features/home/home.module';
 
 @NgModule({
   declarations: [AppComponent, HeaderComponent, FooterComponent, ContentComponent],
