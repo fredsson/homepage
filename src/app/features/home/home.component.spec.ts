@@ -1,5 +1,6 @@
 import { TestBed, ComponentFixture } from "@angular/core/testing";
 import { HomeComponent } from './home.component';
+import { GitHubActivityComponent } from './github-widget/github-activity.component';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
@@ -7,7 +8,7 @@ describe('HomeComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ HomeComponent ],
+      declarations: [ HomeComponent, GitHubActivityComponent ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(HomeComponent);
