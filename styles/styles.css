@@ -1,0 +1,7 @@
+
+@import url("header.css");
+
+.site-wrap {
+  max-width: 1300px;
+  margin: 0 auto;
+}
