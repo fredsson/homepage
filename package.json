@@ -16,6 +16,7 @@
   },
   "homepage": "https://github.com/fredsson/homepage#readme",
   "devDependencies": {
+    "esbuild": "^0.17.11",
     "http-server": "^14.1.1"
   }
 }
