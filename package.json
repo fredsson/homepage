@@ -1,0 +1,21 @@
+{
+  "name": "freddson-home",
+  "version": "0.0.0",
+  "description": "fredsson.dev homepage using essencejs framework",
+  "scripts": {
+    "watch": "npx http-server dist -c-1 -p 4200"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fredsson/homepage.git"
+  },
+  "author": "Fredrik Andersson",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/fredsson/homepage/issues"
+  },
+  "homepage": "https://github.com/fredsson/homepage#readme",
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}
