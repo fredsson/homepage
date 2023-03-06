@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "description": "fredsson.dev homepage using essencejs framework",
   "scripts": {
-    "watch": "npx http-server dist -c-1 -p 4200"
+    "watch": "npx http-server dist -c-1 -p 4200",
+    "essence:build": "npx esbuild src/essence/cli.ts --bundle --outfile=dist/essence/cli.js --platform=node --external:esbuild"
   },
   "repository": {
     "type": "git",
@@ -16,6 +17,7 @@
   },
   "homepage": "https://github.com/fredsson/homepage#readme",
   "devDependencies": {
+    "@types/node": "^18.14.6",
     "esbuild": "^0.17.11",
     "http-server": "^14.1.1",
     "typescript": "^4.9.5"
