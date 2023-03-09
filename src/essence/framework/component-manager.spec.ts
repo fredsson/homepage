@@ -34,7 +34,7 @@ describe('ComponentManager', () => {
   beforeEach(() => {
     mockElement = {innerHTML: ''};
 
-    mockPlatform = jasmine.createSpyObj<PlatformService>('PlatformService', ['querySelector']);
+    mockPlatform = jasmine.createSpyObj<PlatformService>('PlatformService', ['querySelector', 'removeCssStyleWithTitle']);
     mockPlatform.querySelector.and.returnValue(mockElement as Element);
 
     mockDi = jasmine.createSpyObj<DependencyInjector>('DependencyInjector', ['inject']);

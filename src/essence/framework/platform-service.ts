@@ -4,4 +4,10 @@ export class PlatformService {
     return document.querySelector<T>(selector) ?? undefined;
   }
 
+  public removeCssStyleWithTitle(title: string) {
+    const styleTag = document.head.querySelector(`[title='${title}']`);
+    if (styleTag) {
+      document.head.removeChild(styleTag);
+    }
+  }
 }
