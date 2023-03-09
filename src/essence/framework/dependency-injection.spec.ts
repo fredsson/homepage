@@ -21,6 +21,10 @@ describe('DependencyInjector', () => {
     expect(dependencyInjector).toBeTruthy();
   });
 
+  it('should include dependency injector itself', () => {
+    expect(dependencyInjector.get(DependencyInjector)).toBeTruthy();
+  });
+
   describe('addInstance', () => {
     it('should store instance', () => {
       const expectedTypeName = {name: 'TestClass'};
