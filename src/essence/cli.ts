@@ -1,9 +1,10 @@
 import * as path from 'path';
 import * as fs from 'fs/promises';
 import { Dirent } from 'fs';
-import { generatePrerenderedPage, getWireframeForPage } from './content';
 
 import * as esbuild from 'esbuild'
+import { Component } from './component';
+import { isDefined } from './core';
 
 
 /**
@@ -23,43 +24,53 @@ async function walkDirectory(rootPath: string): Promise<Dirent[]> {
   return directories.concat(e);
 }
 
-async function ensureProjectDistDirectories(rootPath: string, pagesPath: string): Promise<Dirent[]> {
+async function ensureProjectDistDirectories(pageName: string, pagesPath: string): Promise<Dirent[]> {
   const pages = await walkDirectory(pagesPath);
 
-  await fs.mkdir(path.join('dist', rootPath), { recursive: true });
+  await fs.mkdir(path.join('dist', pageName), { recursive: true });
 
   const pageDirectories = pages.filter(d => d.isDirectory());
   await Promise.all(pageDirectories
-    .map(d => fs.mkdir(path.join('dist', rootPath, d.name), { recursive: true }))
+    .map(async d => {
+      await fs.mkdir(path.join('dist', pageName, 'out', d.name), { recursive: true });
+      await fs.mkdir(path.join('dist', pageName, 'js', d.name), { recursive: true });
+    })
   );
 
   return pageDirectories;
 }
 
-async function main(rootPath: string): Promise<void> {
-  console.log('generating website for', rootPath);
+async function main(rootPath: string, name: string): Promise<void> {
+  console.log('generating website for', name);
+
+  await fs.rm(path.join('dist', name), {recursive: true, force: true});
 
   const pagesPath = path.join(rootPath, 'pages');
-  const pageDirectories = await ensureProjectDistDirectories(rootPath, pagesPath);
+  const pageDirectories = await ensureProjectDistDirectories(name, pagesPath);
+  const components = await Promise.all(pageDirectories.map(dirent => Component.load(rootPath, dirent.name)));
 
-  pageDirectories.forEach(async dirent => {
-    try {
-      const componentPath = path.join(pagesPath, dirent.name, `${dirent.name}`);
+  const bundleEntries = await Promise.all(components.map(async component => {
+    const jsTargetDirectory = path.join('dist', name, 'js');
+    await component.transformForBrowser();
+    return await component.saveForBundling(jsTargetDirectory);
+  }));
 
-      const componentTs = await fs.readFile(`${componentPath}.ts`, { encoding: 'utf-8' });
-
-      const componentJs = await esbuild.transform(componentTs, {platform: "browser", loader: "ts"});
-
-      const wireframe = await getWireframeForPage(rootPath, dirent.name);
-      const componentHtml = await fs.readFile(path.join(pagesPath, dirent.name, `${dirent.name}.html`), { encoding: 'utf-8' });
-      await generatePrerenderedPage(rootPath, dirent.name, componentHtml, componentJs.code, wireframe);
-
-      console.log('website generation done..');
-    } catch(error) {
-      console.error(error);
-    }
+  await esbuild.build({
+    bundle: true,
+    splitting: true,
+    chunkNames: 'chunks/[hash].[name]',
+    entryPoints: bundleEntries.filter(isDefined),
+    outdir: `dist/${name}/out`,
+    format: 'esm'
   });
+
+  await Promise.all(components.map(async c => {
+    await c.saveForBrowser(`dist/${name}/out`);
+  }));
+
+  console.log('website generation done..');
 }
 
 const rootPath = process.argv[2];
-main(rootPath);
+const name = process.argv[3];
+main(rootPath, name);
