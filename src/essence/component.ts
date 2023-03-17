@@ -5,6 +5,7 @@ import * as esbuild from 'esbuild';
 import { getOptionalFile } from './content';
 import { isDefined } from './core';
 import { ComponentWireframe } from './wireframe';
+import { DependencyResolver } from './tools/dependency-resolver';
 
 const INIT_REPLACE = `init() {
   let config = this.config();
@@ -95,6 +96,8 @@ export class Component {
 
   private jsSource: string | undefined;
 
+  private dependencyResolver = new DependencyResolver();
+
   private constructor(
     public readonly name: string,
     private tsSource: string,
@@ -109,6 +112,16 @@ export class Component {
    * Transform this component to something that can be loaded in the browser and used with essence
    */
   public async transformForBrowser(): Promise<void> {
+    // add inject points based on constructor
+    const inject = this.dependencyResolver.resolveForSource(this.tsSource);
+    if (isDefined(inject)) {
+      const startOfTsClass = this.tsSource.indexOf('export class');
+      const endOfTsClass = this.tsSource.indexOf('{', startOfTsClass) + 1;
+      const tsClass = this.tsSource.substring(startOfTsClass, endOfTsClass);
+
+      this.tsSource = this.tsSource.replace(tsClass, `${tsClass}\n  ${inject}`);
+    }
+
     // transform ts to js
     const transformResult = await esbuild.transform(this.tsSource, {platform: "browser", loader: "ts"});
 
