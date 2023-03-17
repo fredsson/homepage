@@ -24,29 +24,20 @@ async function walkDirectory(rootPath: string): Promise<Dirent[]> {
   return directories.concat(e);
 }
 
-async function ensureProjectDistDirectories(pageName: string, pagesPath: string): Promise<Dirent[]> {
+async function findAllPageDirectories(pagesPath: string): Promise<Dirent[]> {
   const pages = await walkDirectory(pagesPath);
 
-  await fs.mkdir(path.join('dist', pageName), { recursive: true });
-
-  const pageDirectories = pages.filter(d => d.isDirectory());
-  await Promise.all(pageDirectories
-    .map(async d => {
-      await fs.mkdir(path.join('dist', pageName, 'out', d.name), { recursive: true });
-      await fs.mkdir(path.join('dist', pageName, 'js', d.name), { recursive: true });
-    })
-  );
-
-  return pageDirectories;
+  return pages.filter(d => d.isDirectory());
 }
 
 async function main(rootPath: string, name: string): Promise<void> {
   console.log('generating website for', name);
 
   await fs.rm(path.join('dist', name), {recursive: true, force: true});
+  await fs.mkdir(path.join('dist', name), { recursive: true });
 
   const pagesPath = path.join(rootPath, 'pages');
-  const pageDirectories = await ensureProjectDistDirectories(name, pagesPath);
+  const pageDirectories = await findAllPageDirectories(pagesPath);
   const components = await Promise.all(pageDirectories.map(dirent => Component.load(rootPath, dirent.name)));
 
   const bundleEntries = await Promise.all(components.map(async component => {

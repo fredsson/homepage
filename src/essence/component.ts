@@ -144,7 +144,10 @@ export class Component {
       return Promise.resolve(undefined);
     }
 
-    const targetPath = path.join(targetDirectory, this.name, this.name + '.js');
+    const outputDirectory = this.buildOutputPath(targetDirectory);
+    await fs.mkdir(outputDirectory, { recursive: true });
+
+    const targetPath = path.join(outputDirectory, this.name + '.js');
     await fs.writeFile(targetPath, this.jsSource, { encoding: 'utf-8' });
     return targetPath;
   }
@@ -154,6 +157,14 @@ export class Component {
    */
   public async saveForBrowser(targetDirectory: string): Promise<void> {
     await this.wireframe.transformForBrowser(this);
-    await this.wireframe.save(path.join(targetDirectory, this.name));
+    await this.wireframe.save(this.buildOutputPath(targetDirectory));
+  }
+
+  private buildOutputPath(targetDirectory: string): string {
+    if (this.name.includes('home')) {
+      return targetDirectory;
+    }
+
+    return path.join(targetDirectory, this.name);
   }
 }

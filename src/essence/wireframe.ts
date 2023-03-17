@@ -7,7 +7,7 @@ import { ConstructableComponent } from './component';
 function generateInitScript(component: ConstructableComponent): string {
   return `
     <script type="module">
-      import {di} from '/essence.js';
+      import {di, ComponentManager} from '/essence.js';
       import {${component.constructorName}} from './${component.name}.js';
 
       const componentManager = di.get(ComponentManager);

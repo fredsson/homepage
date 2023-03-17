@@ -8,9 +8,6 @@ export interface ViewModelConfig {
   events: {selector: string, event: string, callback: () => void}[]
 }
 
-export interface Router {
-}
-
 export interface ViewModel {
   config(): ViewModelConfig;
   canActivate?(): Promise<boolean>;
