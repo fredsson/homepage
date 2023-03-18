@@ -1,6 +1,9 @@
-import { ViewModel, ViewModelConfig } from 'essence/core';
+import { Router, ViewModel, ViewModelConfig } from 'essence';
 
 export class Home implements ViewModel {
+  constructor(private router: Router) {
+  }
+
   config(): ViewModelConfig {
     return {
       bindings: [],

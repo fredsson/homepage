@@ -1,5 +1,5 @@
 import { add } from 'common';
-import { ViewModel, Router, ViewModelConfig } from 'essence/core';
+import { Router, ViewModel, ViewModelConfig } from 'essence';
 
 export class Projects implements ViewModel {
 

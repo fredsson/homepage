@@ -1,6 +1,10 @@
-import { ViewModel, ViewModelConfig } from 'essence/core';
+import { add } from 'common';
+import { ViewModel, ViewModelConfig } from 'essence';
 
 export class Work implements ViewModel {
+  constructor() {
+  }
+
   config(): ViewModelConfig {
     return {
       bindings: [],
@@ -9,6 +13,7 @@ export class Work implements ViewModel {
     }
   }
   init(): void {
+    console.log(add(5,5));
   }
   destroy(): void {
   }

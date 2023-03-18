@@ -34,4 +34,7 @@ export class ComponentManager {
     container.innerHTML = instance.content;
     instance.init();
   }
+
+  public changeToComponentFromRoute() {
+  }
 }
