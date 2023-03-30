@@ -7,7 +7,9 @@ export class Home implements ViewModel {
   config(): ViewModelConfig {
     return {
       bindings: [],
-      events: [],
+      events: [
+        { selector: '#projects-link', event: 'click', callback: () => this.router.navigate('projects')}
+      ],
       inputs: []
     }
   }
