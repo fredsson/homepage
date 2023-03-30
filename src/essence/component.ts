@@ -8,34 +8,27 @@ import { ComponentWireframe } from './wireframe';
 import { DependencyResolver } from './tools/dependency-resolver';
 
 const INIT_REPLACE = `init() {
+  this.state.eventAbortController = new AbortController();
+
   let config = this.config();
-  const inputSignals = (config.inputs || []).map(input => {
+  (config.inputs || []).forEach(input => {
     const element = document.querySelector(input.selector);
     if (!element) {
       console.error('could not find element with selector: ', input.selector)
       return;
     }
 
-    signal = (new AbortController()).signal;
-
-    element.addEventListener('input', input.change, {signal});
-
-    return signal;
+    element.addEventListener('input', input.change, {signal: this.state.eventAbortController.signal});
   });
 
-  const eventSignals = (config.events || []).map(ev => {
+  (config.events || []).forEach(ev => {
     const element = document.querySelector(ev.selector);
     if (!element) {
       console.error('could not find element with selector: ', ev.selector)
       return;
     }
-    signal = (new AbortController()).signal;
-    element.addEventListener(ev.event, ev.callback, {signal});
-
-    return signal;
+    element.addEventListener(ev.event, ev.callback, {signal: this.state.eventAbortController.signal});
   });
-
-  this.state.eventListenerSignals = inputSignals.concat(eventSignals);
 
   (config.bindings || []).forEach(binding => {
     const element = document.querySelector(binding.selector);
@@ -61,7 +54,7 @@ const INIT_REPLACE = `init() {
 `;
 
 const DESTROY_REPLACE = `destroy() {
-  this.state.eventListenerSignals.forEach(signal => signal.abort());
+  this.state.eventAbortController.abort();
 `;
 
 export interface ConstructableComponent {
