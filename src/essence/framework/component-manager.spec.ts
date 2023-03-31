@@ -70,4 +70,8 @@ describe('ComponentManager', () => {
       expect(previousComponent.destroySpy).toHaveBeenCalledTimes(1);
     });
   });
+
+  describe('changeToComponentFromRoute', () => {
+
+  });
 });

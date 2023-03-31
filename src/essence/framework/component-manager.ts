@@ -19,7 +19,7 @@ export class ComponentManager {
   /**
    * Used from wireframe to load initial component and remove things no longer needed in the wireframe (for example wireframe css)
    */
-  public changeToComponent(component: {new(...args: any[]): InstantiatedComponent}) {
+  public changeToComponent(component: {new(...args: any[]): InstantiatedComponent}): void {
     const container = this.platform.querySelector<Element>('#app');
     if (!container) {
       return;
@@ -35,6 +35,22 @@ export class ComponentManager {
     instance.init();
   }
 
-  public changeToComponentFromRoute() {
+  public async changeToComponentFromRoute(route: string): Promise<void> {
+    const module = await import(`./fredsson/out/${route}/${route}.js`);
+    const ctorName = Object.keys(module)[0];
+    const ctor = module[ctorName];
+
+    this.changeToComponent(ctor);
+    // fetch component source
+    // inject the component
+
+    // destroy current component
+    // store changed component as active
+
+    // remove old css
+    // attach new css
+
+    // attach inner html
+    // init component
   }
 }

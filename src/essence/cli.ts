@@ -59,6 +59,17 @@ async function main(rootPath: string, name: string): Promise<void> {
     await c.saveForBrowser(`dist/${name}/out`);
   }));
 
+  // create final dist directory
+  //   add assets directory
+  //   add essence.js
+  //   add everything from project/out directory
+  //   add _redirects
+  //   add robots.txt
+  //   add sitemap (link it in the robots.txt)
+
+  // would be nice with a command that runs this command and then starts a webserver running in the final dist directory
+  // would be nice with a command to auto generate a component
+
   console.log('website generation done..');
 }
 

@@ -7,6 +7,10 @@ export class Router {
   }
 
   public navigate(route: string): void {
-  constructor(componentManager: ComponentManager) {
+    // stop routing
+    // change to component
+    this.componentManager.changeToComponentFromRoute(route);
+    // if component loaded ok
+    //   update route
   }
 }
