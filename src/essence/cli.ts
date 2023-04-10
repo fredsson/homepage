@@ -33,15 +33,18 @@ async function findAllPageDirectories(pagesPath: string): Promise<Dirent[]> {
 async function main(rootPath: string, name: string): Promise<void> {
   console.log('generating website for', name);
 
-  await fs.rm(path.join('dist', name), {recursive: true, force: true});
-  await fs.mkdir(path.join('dist', name), { recursive: true });
+  await fs.rm(path.join('dist'), {recursive: true, force: true});
+  await fs.mkdir(path.join('dist'), { recursive: true });
+
+  await fs.rm(path.join('out', name), {recursive: true, force: true});
+  await fs.mkdir(path.join('out', name), { recursive: true });
 
   const pagesPath = path.join(rootPath, 'pages');
   const pageDirectories = await findAllPageDirectories(pagesPath);
   const components = await Promise.all(pageDirectories.map(dirent => Component.load(rootPath, dirent.name)));
 
   const bundleEntries = await Promise.all(components.map(async component => {
-    const jsTargetDirectory = path.join('dist', name, 'js');
+    const jsTargetDirectory = path.join('out', name, 'js');
     await component.transformForBrowser();
     return await component.saveForBundling(jsTargetDirectory);
   }));
@@ -51,13 +54,17 @@ async function main(rootPath: string, name: string): Promise<void> {
     splitting: true,
     chunkNames: 'chunks/[hash].[name]',
     entryPoints: bundleEntries.filter(isDefined),
-    outdir: `dist/${name}/out`,
+    outdir: `out/${name}/bundle`,
     format: 'esm'
   });
 
   await Promise.all(components.map(async c => {
-    await c.saveForBrowser(`dist/${name}/out`);
+    await c.saveForBrowser(`out/${name}/bundle`);
   }));
+
+  await fs.cp(path.join('assets'), 'dist/assets', {recursive: true});
+  await fs.cp(path.join('out', name, 'bundle/'), 'dist/', {recursive: true});
+  await fs.cp('out/essence/essence.js', 'dist/essence.js');
 
   // create final dist directory
   //   add assets directory
