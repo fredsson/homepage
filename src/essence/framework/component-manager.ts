@@ -4,14 +4,19 @@ import { PlatformService } from "./platform-service";
 
 interface InstantiatedComponent extends ViewModel {
   content: string;
+  style?: string;
 }
-
-const WIREFRAME_CSS_TITLE = 'wireframe_dep';
 
 export class ComponentManager {
   public static inject = [PlatformService, DependencyInjector];
 
-  private activeComponent: InstantiatedComponent | undefined;
+  private active: {
+    component: InstantiatedComponent | undefined;
+    styleRemoveCallback: (() => void) | undefined;
+  } = {
+    component: undefined,
+    styleRemoveCallback: undefined,
+  };
 
   constructor(private platform: PlatformService, private di: DependencyInjector) {
   }
@@ -24,13 +29,19 @@ export class ComponentManager {
     if (!container) {
       return;
     }
+    this.platform.removeAllInlineStyleElements()
 
     const instance = this.di.inject(component);
 
-    this.activeComponent?.destroy();
-    this.activeComponent = instance;
+    this.active.component?.destroy();
+    this.active.styleRemoveCallback?.();
 
-    this.platform.removeCssStyleWithTitle(WIREFRAME_CSS_TITLE);
+    this.active.component = instance;
+    this.active.styleRemoveCallback = undefined;
+
+    if (this.active.component.style) {
+      this.active.styleRemoveCallback = this.platform.addStyle(this.active.component.style);
+    }
     container.innerHTML = instance.content;
     instance.init();
   }

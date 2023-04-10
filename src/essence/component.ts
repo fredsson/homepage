@@ -120,7 +120,13 @@ export class Component {
 
     // attach component html to js file
     const startOfClass = `export class ${this.constructorName} {`;
-    const jsWithAttachedHtml = transformResult.code.replace(startOfClass, `${startOfClass}\n  content = \`${this.htmlSource}\`;state = {}`);
+    let replacementCode: string;
+    if (isDefined(this.cssSource) && this.cssSource.length > 0) {
+      replacementCode = `${startOfClass}\n  content = \`${this.htmlSource}\`;\n  style = \`${this.cssSource}\`;\n  state = {};`;
+    } else {
+      replacementCode = `${startOfClass}\n  content = \`${this.htmlSource}\`;\n  state = {};`;
+    }
+    const jsWithAttachedHtml = transformResult.code.replace(startOfClass, replacementCode);
 
     // patch components with essence setup (config -> eventListeners)
     this.jsSource = jsWithAttachedHtml

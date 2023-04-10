@@ -33,7 +33,7 @@ export class ComponentWireframe {
 
     // TODO: get title, description and other meta from .meta file
     this.htmlContent = topContent.replace('${TITLE}', component.name) +
-      `  <style title="wireframe_dep">${this.cssContent}</style>\n` +
+      `  <style>${this.cssContent}</style>\n` +
       `</head>` +
       topBodyContent +
       `   ${generateInitScript(component)}
