@@ -154,8 +154,8 @@ export class Component {
   /**
    * Saves html file containing wireframe and script for loading component
    */
-  public async saveForBrowser(targetDirectory: string): Promise<void> {
-    await this.wireframe.transformForBrowser(this);
+  public async saveForBrowser(targetDirectory: string, hasGlobalStyles: boolean): Promise<void> {
+    await this.wireframe.transformForBrowser(this, hasGlobalStyles);
     await this.wireframe.save(this.buildOutputPath(targetDirectory));
   }
 

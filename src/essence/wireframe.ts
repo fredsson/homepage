@@ -25,7 +25,7 @@ export class ComponentWireframe {
   private constructor(private htmlContent: string, private cssContent: string) {
   }
 
-  public async transformForBrowser(component: ConstructableComponent): Promise<void> {
+  public async transformForBrowser(component: ConstructableComponent, hasGlobalStyles: boolean): Promise<void> {
     // TODO: might want to use jsdom to remove some of the hardcoded values here
     const [topContent, contentAfterHead] = this.htmlContent.split('</head>');
 
@@ -33,23 +33,12 @@ export class ComponentWireframe {
 
     // TODO: get title, description and other meta from .meta file
     this.htmlContent = topContent.replace('${TITLE}', component.name) +
+      (hasGlobalStyles ? `  <link rel="stylesheet" href="/styles.css"/>` : '') +
       `  <style>${this.cssContent}</style>\n` +
       `</head>` +
       topBodyContent +
       `   ${generateInitScript(component)}
     </body>` + contentAfterBody;
-
-    // attach css to the head (inline to ensure loaded fast)
-    // attach <script type="module" src="essence.js"></script>
-    // attach init script <script>essence.componentManager.changeComponent(Home);
-    /*<script>
-      import {di} from "essence"; // make sure essence is loaded
-      import {Home} from './home'; // make sure component is loaded
-
-      di.componentManager.changeToComponent(Home); // change to component using framework
-
-    </script>*/
-    // attach <script type="module">import {Home} from "./home.js"; import {} from "essence.js" </script>
   }
 
   public async save(targetDirectory: string): Promise<void> {

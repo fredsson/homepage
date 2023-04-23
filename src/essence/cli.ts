@@ -7,10 +7,6 @@ import { Component } from './component';
 import { isDefined } from './core';
 
 
-/**
- * @param {string} rootPath
- * @returns {Promise<Dirent[]>}
- */
 async function walkDirectory(rootPath: string): Promise<Dirent[]> {
   const rootEntries = await fs.readdir(rootPath, { withFileTypes: true });
 
@@ -58,13 +54,18 @@ async function main(rootPath: string, name: string): Promise<void> {
     format: 'esm'
   });
 
+  const hasGlobalStyles = (await fs.stat('src/styles.css')).isFile();
+
   await Promise.all(components.map(async c => {
-    await c.saveForBrowser(`out/${name}/bundle`);
+    await c.saveForBrowser(`out/${name}/bundle`, hasGlobalStyles);
   }));
 
   await fs.cp(path.join('assets'), 'dist/assets', {recursive: true});
   await fs.cp(path.join('out', name, 'bundle/'), 'dist/', {recursive: true});
   await fs.cp('out/essence/essence.js', 'dist/essence.js');
+  if (hasGlobalStyles) {
+    await fs.cp('src/styles.css', 'dist/styles.css');
+  }
 
   // create final dist directory
   //   add assets directory
