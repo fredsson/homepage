@@ -29,8 +29,28 @@ export class ComponentManager {
     if (!container) {
       return;
     }
-    this.platform.removeAllInlineStyleElements()
+    this.platform.removeAllInlineStyleElements();
 
+    this.instantiateComponent(component, container);
+  }
+
+  /**
+   * Used from router to initialise provided route
+   */
+  public async changeToComponentFromRoute(route: string): Promise<void> {
+    const container = this.platform.querySelector<Element>('#app');
+    if (!container) {
+      return;
+    }
+
+    const module = await import(`/${route}/${route}.js`);
+    const ctorName = Object.keys(module)[0];
+    const ctor = module[ctorName];
+
+    this.instantiateComponent(ctor, container);
+  }
+
+  private instantiateComponent(component: {new(...args: any[]): InstantiatedComponent}, container: Element): void {
     const instance = this.di.inject(component);
 
     this.active.component?.destroy();
@@ -44,24 +64,5 @@ export class ComponentManager {
     }
     container.innerHTML = instance.content;
     instance.init();
-  }
-
-  public async changeToComponentFromRoute(route: string): Promise<void> {
-    const module = await import(`./fredsson/out/${route}/${route}.js`);
-    const ctorName = Object.keys(module)[0];
-    const ctor = module[ctorName];
-
-    this.changeToComponent(ctor);
-    // fetch component source
-    // inject the component
-
-    // destroy current component
-    // store changed component as active
-
-    // remove old css
-    // attach new css
-
-    // attach inner html
-    // init component
   }
 }
