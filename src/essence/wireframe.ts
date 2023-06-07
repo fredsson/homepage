@@ -8,10 +8,10 @@ function generateInitScript(component: ConstructableComponent): string {
   return `
     <script type="module">
       import {di, ComponentManager} from '/essence.js';
-      import {${component.constructorName}} from './${component.name}.js';
+      import {${component.className}} from './${component.name}.js';
 
       const componentManager = di.get(ComponentManager);
-      componentManager.changeToComponent(${component.constructorName});
+      componentManager.changeToComponent(${component.className});
     </script>
   `;
 }

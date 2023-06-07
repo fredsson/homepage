@@ -59,7 +59,7 @@ const DESTROY_REPLACE = `destroy() {
 
 export interface ConstructableComponent {
   name: string;
-  constructorName: string;
+  className: string;
 }
 
 export class Component {
@@ -85,7 +85,7 @@ export class Component {
     );
   }
 
-  public readonly constructorName: string;
+  public readonly className: string;
 
   private jsSource: string | undefined;
 
@@ -98,7 +98,7 @@ export class Component {
     private cssSource: string | undefined,
     private wireframe: ComponentWireframe
   ) {
-    this.constructorName = this.name.charAt(0).toUpperCase() + this.name.slice(1);
+    this.className = this.findClassNameFromTsSource(tsSource);
   }
 
   /**
@@ -110,16 +110,15 @@ export class Component {
     if (isDefined(inject)) {
       const startOfTsClass = this.tsSource.indexOf('export class');
       const endOfTsClass = this.tsSource.indexOf('{', startOfTsClass) + 1;
-      const tsClass = this.tsSource.substring(startOfTsClass, endOfTsClass);
+      const classDefinition = this.tsSource.substring(startOfTsClass, endOfTsClass);
 
-      this.tsSource = this.tsSource.replace(tsClass, `${tsClass}\n  ${inject}`);
+      this.tsSource = this.tsSource.replace(classDefinition, `${classDefinition}\n  ${inject}`);
     }
 
     // transform ts to js
     const transformResult = await esbuild.transform(this.tsSource, {platform: "browser", loader: "ts"});
-
     // attach component html to js file
-    const startOfClass = `export class ${this.constructorName} {`;
+    const startOfClass = `export class ${this.className} {`;
     let replacementCode: string;
     if (isDefined(this.cssSource) && this.cssSource.length > 0) {
       replacementCode = `${startOfClass}\n  content = \`${this.htmlSource}\`;\n  style = \`${this.cssSource}\`;\n  state = {};`;
@@ -165,5 +164,16 @@ export class Component {
     }
 
     return path.join(targetDirectory, this.name);
+  }
+
+  private findClassNameFromTsSource(tsSource: string): string {
+    const distanceToStart = 'export class'.length
+    const startOfClassName = tsSource.indexOf('export class') + distanceToStart;
+    const endOfClassName = ['{', 'extends', 'implements']
+      .map(e => tsSource.indexOf(e, startOfClassName))
+      .filter(i => i >= 0)
+      .sort((a,b) => a-b)[0];
+
+    return tsSource.substring(startOfClassName, endOfClassName).trim();
   }
 }

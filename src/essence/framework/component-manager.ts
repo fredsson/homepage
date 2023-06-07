@@ -43,7 +43,9 @@ export class ComponentManager {
       return;
     }
 
-    const module = await import(`/${route}/${route}.js`);
+    const importRoute = route.includes('home') ? `/${route}.js` : `/${route}/${route}.js`;
+
+    const module = await import(importRoute);
     const ctorName = Object.keys(module)[0];
     const ctor = module[ctorName];
 
