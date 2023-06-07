@@ -1,6 +1,7 @@
-import { Router, ViewModel, ViewModelConfig } from 'essence';
+import { Router, ViewModel, ViewModelConfig } from "essence";
 
-export class Home implements ViewModel {
+export class GameDev implements ViewModel {
+
   constructor(private router: Router) {
   }
 
@@ -11,14 +12,15 @@ export class Home implements ViewModel {
         { selector: '#home-nav-btn', event: 'click', callback: () => this.router.navigate('home')},
         { selector: '#software-nav-btn', event: 'click', callback: () => this.router.navigate('software-dev')},
         { selector: '#gamedev-nav-btn', event: 'click', callback: () => this.router.navigate('game-dev')},
-        { selector: '#software-learn-more', event: 'click', callback: () => this.router.navigate('software-dev')},
-        { selector: '#gamedev-learn-more', event: 'click', callback: () => this.router.navigate('game-dev')}
       ],
       inputs: []
     }
   }
+
   init(): void {
   }
+
   destroy(): void {
   }
 }
+
