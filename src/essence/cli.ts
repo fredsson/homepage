@@ -1,11 +1,12 @@
 import * as path from 'path';
 import * as fs from 'fs/promises';
-import { Dirent } from 'fs';
+import { Dirent, FSWatcher, watch } from 'fs';
 
 import * as esbuild from 'esbuild'
 import { Component } from './component';
 import { isDefined } from './core';
 
+const watchers: FSWatcher[] = [];
 
 async function walkDirectory(rootPath: string): Promise<Dirent[]> {
   const rootEntries = await fs.readdir(rootPath, { withFileTypes: true });
@@ -25,6 +26,9 @@ async function findAllPageDirectories(pagesPath: string): Promise<Dirent[]> {
 
   return pages.filter(d => d.isDirectory());
 }
+
+let isRunning = false;
+let newChanges = false;
 
 async function main(rootPath: string, name: string): Promise<void> {
   console.log('generating website for', name);
@@ -79,8 +83,42 @@ async function main(rootPath: string, name: string): Promise<void> {
   // would be nice with a command to auto generate a component
 
   console.log('website generation done..');
+
+  if (newChanges) {
+    newChanges = false;
+    await main(rootPath, name);
+  }
+
+  isRunning = false;
+}
+
+function watchForChanges(rootPath: string, name: string) {
+  watchers.push(watch('src', {recursive: true}, (ev, filename) => {
+    if (isRunning) {
+      newChanges = true;
+      return;
+    }
+    isRunning = true;
+    main(rootPath, name);
+  }));
+
+  watchers.push(watch('assets', {recursive: true}, (ev, filename) => {
+    if (isRunning) {
+      newChanges = true;
+      return;
+    }
+    isRunning = true;
+    main(rootPath, name);
+  }));
 }
 
 const rootPath = process.argv[2];
 const name = process.argv[3];
 main(rootPath, name);
+
+watchForChanges(rootPath, name);
+
+process.on('exit', () => {
+  watchers.forEach(w => w.close());
+});
+
