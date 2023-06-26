@@ -37,10 +37,10 @@ export class ComponentManager {
   /**
    * Used from router to initialise provided route
    */
-  public async changeToComponentFromRoute(route: string): Promise<void> {
+  public async changeToComponentFromRoute(route: string): Promise<boolean> {
     const container = this.platform.querySelector<Element>('#app');
     if (!container) {
-      return;
+      return false;
     }
 
     const importRoute = route.includes('home') ? `/${route}.js` : `/${route}/${route}.js`;
@@ -50,6 +50,8 @@ export class ComponentManager {
     const ctor = module[ctorName];
 
     this.instantiateComponent(ctor, container);
+
+    return true;
   }
 
   private instantiateComponent(component: {new(...args: any[]): InstantiatedComponent}, container: Element): void {

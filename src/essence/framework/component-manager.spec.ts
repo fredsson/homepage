@@ -34,7 +34,7 @@ describe('ComponentManager', () => {
   beforeEach(() => {
     mockElement = {innerHTML: ''};
 
-    mockPlatform = jasmine.createSpyObj<PlatformService>('PlatformService', ['querySelector', 'removeCssStyleWithTitle']);
+    mockPlatform = jasmine.createSpyObj<PlatformService>('PlatformService', ['querySelector']);
     mockPlatform.querySelector.and.returnValue(mockElement as Element);
 
     mockDi = jasmine.createSpyObj<DependencyInjector>('DependencyInjector', ['inject']);
@@ -69,9 +69,5 @@ describe('ComponentManager', () => {
 
       expect(previousComponent.destroySpy).toHaveBeenCalledTimes(1);
     });
-  });
-
-  describe('changeToComponentFromRoute', () => {
-
   });
 });
