@@ -1,3 +1,12 @@
+@font-face {
+  font-family: 'Roboto';
+  src: url('assets/fonts/roboto-regular-webfont.woff2') format('woff2'),
+       url('assets/fonts/roboto-regular-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+
+}
+
 body {
   padding: 0;
   margin: 0;
@@ -13,8 +22,17 @@ i, cite, em, var, dfn, address {
 }
 
 b, h1, h2, h3, h4, h5, h6, strong, th {
+  font-family: Roboto, Helvetica, Arial, sans-serif;
   font-weight: normal;
 }
+
+.text-content {
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+}
+
+button {
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+} 
 
 [hidden] {
   display: none !important;
