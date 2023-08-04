@@ -1,9 +1,3 @@
-:root {
-  --learn-more-primary: #DB7421;
-  --learn-more-highlight: #E48F4B;
-}
-
-
 .content {
   min-height: 100vh;
   display: flex;
@@ -61,28 +55,12 @@
 }
 
 .main-nav__item:hover {
-  background-color: #777777;
+  background-color: var(--primary-btn-light);
 }
 
 .nav-icon {
   width: 32px;
   height: 32px;
-}
-
-#drawer-btn {
-  color: white;
-  font-weight: 700;
-  background-color: black;
-  border-radius: 0 5px 5px 0;
-  height:5rem;
-  width: 8px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-#drawer-btn:hover {
-  background-color: #777777;
 }
 
 .main-content {
@@ -116,9 +94,9 @@
   align-self: end;
   border: 0;
   padding: 0.5rem;
-  background-color: var(--learn-more-primary);
+  background-color: var(--primary-btn);
 }
 
 .learn-more-btn:hover {
-  background-color: var(--learn-more-highlight);
+  background-color: var(--primary-btn-light);
 }

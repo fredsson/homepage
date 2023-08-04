@@ -6,9 +6,6 @@ import { isDefined } from "essence/core";
 export class DependencyResolver {
   public resolveForSource(source: string): string | undefined {
     const startOfConstructor = source.indexOf('constructor');
-    /*if (startOfConstructor === -1) {
-      return undefined;
-    }*/
 
     const startOfParams = source.indexOf('(', startOfConstructor) + 1;
     const endOfParams = source.indexOf(')', startOfConstructor);

@@ -16,3 +16,17 @@ export interface ViewModel<T = any> {
   canDeactivate?(): Promise<boolean>;
   destroy(): void;
 }
+
+export interface ComponentViewModel<T = any> extends ViewModel<T> {
+  tagName: string;
+}
+
+export abstract class WebComponentViewModel<T = any> extends HTMLElement {
+  tagName: string;
+  state?: T
+  abstract config(): ViewModelConfig;
+  canActivate?(): Promise<boolean>;
+  abstract init(): void;
+  canDeactivate?(): Promise<boolean>;
+  abstract destroy(): void;
+}

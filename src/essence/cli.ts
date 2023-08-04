@@ -5,6 +5,7 @@ import { Dirent, FSWatcher, watch } from 'fs';
 import * as esbuild from 'esbuild'
 import { Component } from './component';
 import { isDefined } from './core';
+import { WebComponent } from './webcomponent';
 
 const watchers: FSWatcher[] = [];
 
@@ -21,8 +22,8 @@ async function walkDirectory(rootPath: string): Promise<Dirent[]> {
   return directories.concat(e);
 }
 
-async function findAllPageDirectories(pagesPath: string): Promise<Dirent[]> {
-  const pages = await walkDirectory(pagesPath);
+async function findAllDirectories(path: string): Promise<Dirent[]> {
+  const pages = await walkDirectory(path);
 
   return pages.filter(d => d.isDirectory());
 }
@@ -40,10 +41,17 @@ async function main(rootPath: string, name: string): Promise<void> {
   await fs.mkdir(path.join('out', name), { recursive: true });
 
   const pagesPath = path.join(rootPath, 'pages');
-  const pageDirectories = await findAllPageDirectories(pagesPath);
-  const components = await Promise.all(pageDirectories.map(dirent => Component.load(rootPath, dirent.name)));
+  const pageDirectories = await findAllDirectories(pagesPath);
+  const pageComponents = await Promise.all(pageDirectories.map(dirent => Component.load(rootPath, dirent.name)));
 
-  const bundleEntries = await Promise.all(components.map(async component => {
+  const webComponentDirectories = await findAllDirectories(path.join(rootPath, 'components'));
+  const webComponents = await Promise.all(webComponentDirectories.map(dirent => WebComponent.load(rootPath, dirent.name)));
+
+  webComponents.forEach(c => {
+    c.transformForBrowser();
+  });
+
+  const bundleEntries = await Promise.all(pageComponents.map(async component => {
     const jsTargetDirectory = path.join('out', name, 'js');
     await component.transformForBrowser();
     return await component.saveForBundling(jsTargetDirectory);
@@ -60,7 +68,7 @@ async function main(rootPath: string, name: string): Promise<void> {
 
   const hasGlobalStyles = (await fs.stat('src/styles.css')).isFile();
 
-  await Promise.all(components.map(async c => {
+  await Promise.all(pageComponents.map(async c => {
     await c.saveForBrowser(`out/${name}/bundle`, hasGlobalStyles);
   }));
 
@@ -116,7 +124,10 @@ const rootPath = process.argv[2];
 const name = process.argv[3];
 main(rootPath, name);
 
-watchForChanges(rootPath, name);
+if (process.argv[4] === '--watch') {
+  watchForChanges(rootPath, name);
+}
+
 
 process.on('exit', () => {
   watchers.forEach(w => w.close());
