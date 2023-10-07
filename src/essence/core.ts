@@ -17,10 +17,6 @@ export interface ViewModel<T = any> {
   destroy(): void;
 }
 
-export interface ComponentViewModel<T = any> extends ViewModel<T> {
-  tagName: string;
-}
-
 export abstract class WebComponentViewModel<T = any> extends HTMLElement {
   tagName: string;
   state?: T

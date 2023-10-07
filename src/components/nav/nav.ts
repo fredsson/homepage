@@ -1,7 +1,6 @@
-import { ComponentViewModel, Router, ViewModelConfig } from "essence";
+import { Router, ViewModel, ViewModelConfig } from "essence";
 
-export class Nav implements ComponentViewModel {
-  public tagName = 'app-nav';
+export class Nav implements ViewModel {
 
   constructor(private router: Router) {
   }

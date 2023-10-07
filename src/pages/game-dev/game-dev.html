@@ -1,16 +1,21 @@
 <div class="content">
-  <div class="nav-container">
-    <nav class="main-nav">
-      <div id="home-nav-btn" class="main-nav__item" title="Home"><img class="nav-icon" src="/assets/home_white_24dp.svg"></div>
-      <div id="software-nav-btn" class="main-nav__item" title="Software Development"><img class="nav-icon" src="/assets/work_white_24dp.svg"></div>
-      <div id="gamedev-nav-btn" class="main-nav__item"  title="Game Development"><img class="nav-icon" src="/assets/smart_toy_white_24dp.svg"></div>
-    </nav>
-  </div>
+  <app-nav></app-nav>
   <div class="main-content">
-    Here you can read more about my game development work
-    * Dev blogs
-    * GameJams (links + github)
-    * Cool tools that I use for gamedev
-    * maybe some music/art that I have created
+    <div class="content-container">
+      <h1 class="text-content">Game Jam</h1>
+      <p class="text-content">What is ludum dare/why do I like it so much</p>
+      <button id="software-learn-more" class="learn-more-btn">See Games</button>
+    </div>
+    <div class="content-container content-container--right">
+      <p class="text-content">Ludum Dare 51 - Dekasecond Sushi</p>
+      <p class="text-content">Take on the role as a sushi chef and try and keep the orders rolling out</p>
+      <a class="btn learn-more-btn" href="/ld/51" target="_blank" >Play</a>
+    </div>
+    <div class="content-container content-container--right">
+      <p class="text-content">Ludum Dare 54 - Immunobots</p>
+      <p class="text-content">Control a nanobot tasked with infiltrating and exploring the human body to combat diseases. Destroy all bacteria floating around before the patient dies.</p>
+      <a class="btn learn-more-btn" href="/ld/54" target="_blank" >Play</a>
+      <img class="game-thumbnail" src="/assets/immunobots_thumb.png">
+    </div>
   </div>
 </div>

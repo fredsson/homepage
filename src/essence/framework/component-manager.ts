@@ -89,7 +89,9 @@ export class ComponentManager {
       }
 
       const module = await import(`/${componentName}/${componentName}.js`);
-      this.di.injectWebComponent(module)
+      const ctorName = Object.keys(module)[0];
+      const ctor = module[ctorName];
+      this.di.injectWebComponent(ctor, module);
 
       this.loadedWebComponents.push(componentName);
     });
