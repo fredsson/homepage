@@ -1,16 +1,17 @@
 import { getOptionalFile } from './content';
 import { isDefined } from './core';
 import { DependencyResolver } from './tools/dependency-resolver';
+import * as fs from 'fs/promises';
 
 import * as path from 'path';
 import * as esbuild from 'esbuild';
 
-const INIT_REPLACE = `init() {
+const INIT_REPLACE = `init(root) {
   this.state.eventAbortController = new AbortController();
 
   let config = this.config();
   (config.inputs || []).forEach(input => {
-    const element = document.querySelector(input.selector);
+    const element = root.querySelector(input.selector);
     if (!element) {
       console.error('could not find element with selector: ', input.selector)
       return;
@@ -20,7 +21,7 @@ const INIT_REPLACE = `init() {
   });
 
   (config.events || []).forEach(ev => {
-    const element = document.querySelector(ev.selector);
+    const element = root.querySelector(ev.selector);
     if (!element) {
       console.error('could not find element with selector: ', ev.selector)
       return;
@@ -29,7 +30,7 @@ const INIT_REPLACE = `init() {
   });
 
   (config.bindings || []).forEach(binding => {
-    const element = document.querySelector(binding.selector);
+    const element = root.querySelector(binding.selector);
     if (!element) {
       console.error('could not find element with selector:', binding.selector);
       return;
@@ -69,7 +70,7 @@ export class WebComponent {
       throw new Error('Component must have a ts and html source!');
     }
 
-    return new WebComponent(tsSource, htmlSource, cssSource);
+    return new WebComponent(componentName, tsSource, htmlSource, cssSource);
   }
 
   public readonly className: string;
@@ -79,6 +80,7 @@ export class WebComponent {
   private dependencyResolver = new DependencyResolver();
 
   private constructor(
+    private name: string,
     private tsSource: string,
     private htmlSource: string,
     private cssSource: string | undefined
@@ -96,6 +98,37 @@ export class WebComponent {
       this.tsSource = this.tsSource.replace(classDefinition, `${classDefinition}\n  ${inject}`);
     }
 
+    const componentTagName = this.findTagNameFromClassName(this.className);
+    this.tsSource += `\n\n
+    export const init = (deps) => {
+      customElements.define('${componentTagName}', class ${this.className}Component extends HTMLElement {
+        public component;
+
+        constructor() {
+          super();
+          this.component = new ${this.className}(deps);
+        }
+
+        connectedCallback() {
+          const shadowRoot = this.attachShadow({mode:"open"});
+
+          shadowRoot.innerHTML = this.component.content;
+
+          const style = document.createElement('style');
+          style.innerHTML = this.component.style;
+          shadowRoot.appendChild(style);
+
+
+          this.component.init(shadowRoot);
+        }
+
+        disconnectedCallback() {
+          this.component.destroy();
+        }
+      });
+    };
+    `;
+
     const transformResult = await esbuild.transform(this.tsSource, {platform: "browser", loader: "ts"});
 
     // attach component html to js file
@@ -112,34 +145,20 @@ export class WebComponent {
     this.jsSource = jsWithAttachedHtml
       .replace('init() {', INIT_REPLACE)
       .replace('destroy() {', DESTROY_REPLACE);
+  }
 
-    this.jsSource += '\n\n';
+  public async saveForBundling(targetDirectory: string): Promise<string | undefined> {
+    if (!isDefined(this.jsSource)) {
+      console.warn(`Did not save component ${this.name} since source is empty. Did you forget to transform first?`);
+      return Promise.resolve(undefined);
+    }
 
-    const componentTagName = 'app-nav';
-    this.jsSource += `customElements.define('${componentTagName}', class ${this.className}Component extends HTMLElement {
-      component = undefined;
+    const outputDirectory = path.join(targetDirectory, this.name);
+    await fs.mkdir(outputDirectory, { recursive: true });
 
-      constructor() {
-        super();
-        component = new ${this.className}();
-      }
-
-      connectedCallback() {
-        const shadowRoot = this.attachShadow({mode:"open"});
-
-        const style = document.createElement('style');
-        style.innerHTML = this.component.style;
-        shadowRoot.append(style);
-
-        shadowRoot.innerHTML = this.component.content;
-
-        this.component.init();
-      }
-
-      disconnectedCallback() {
-        this.component.destroy();
-      }
-    });`;
+    const targetPath = path.join(outputDirectory, this.name + '.js');
+    await fs.writeFile(targetPath, this.jsSource, { encoding: 'utf-8' });
+    return targetPath;
   }
 
 
@@ -153,5 +172,9 @@ export class WebComponent {
       .sort((a,b) => a-b)[0];
 
     return tsSource.substring(startOfClassName, endOfClassName).trim();
+  }
+
+  private findTagNameFromClassName(className: string): string {
+    return `app-${className.toLocaleLowerCase()}`;
   }
 }

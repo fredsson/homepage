@@ -2,13 +2,22 @@ import { ViewModel } from "essence/core";
 import { DependencyInjector } from "./dependency-injection";
 import { PlatformService } from "./platform-service";
 
+interface ComponentDefinition {
+  new(...args: any[]): InstantiatedComponent;
+  webComponents: string[];
+  inject?: any[];
+}
+
 interface InstantiatedComponent extends ViewModel {
   content: string;
   style?: string;
+  webComponents: string[];
 }
 
 export class ComponentManager {
   public static inject = [PlatformService, DependencyInjector];
+
+  private loadedWebComponents: string[] = [];
 
   private active: {
     component: InstantiatedComponent | undefined;
@@ -24,7 +33,7 @@ export class ComponentManager {
   /**
    * Used from wireframe to load initial component and remove things no longer needed in the wireframe (for example wireframe css)
    */
-  public changeToComponent(component: {new(...args: any[]): InstantiatedComponent}): void {
+  public changeToComponent(component: ComponentDefinition): void {
     const container = this.platform.querySelector<Element>('#app');
     if (!container) {
       return;
@@ -54,7 +63,9 @@ export class ComponentManager {
     return true;
   }
 
-  private instantiateComponent(component: {new(...args: any[]): InstantiatedComponent}, container: Element): void {
+  private instantiateComponent(component: ComponentDefinition, container: Element): void {
+    this.loadWebComponents(component);
+
     const instance = this.di.inject(component);
 
     this.active.component?.destroy();
@@ -66,7 +77,21 @@ export class ComponentManager {
     if (this.active.component.style) {
       this.active.styleRemoveCallback = this.platform.addStyle(this.active.component.style);
     }
+
     container.innerHTML = instance.content;
     instance.init();
+  }
+
+  private loadWebComponents(component: ComponentDefinition) {
+    component.webComponents.forEach(async (componentName) => {
+      if (this.loadedWebComponents.includes(componentName)) {
+        return;
+      }
+
+      const module = await import(`/${componentName}/${componentName}.js`);
+      this.di.injectWebComponent(module)
+
+      this.loadedWebComponents.push(componentName);
+    });
   }
 }

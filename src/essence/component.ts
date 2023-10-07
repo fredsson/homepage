@@ -107,12 +107,14 @@ export class Component {
   public async transformForBrowser(): Promise<void> {
     // add inject points based on constructor
     const inject = this.dependencyResolver.resolveForSource(this.tsSource);
+    const webComponents = this.dependencyResolver.resolveWebComponentForHtml(this.htmlSource);
+
     if (isDefined(inject)) {
       const startOfTsClass = this.tsSource.indexOf('export class');
       const endOfTsClass = this.tsSource.indexOf('{', startOfTsClass) + 1;
       const classDefinition = this.tsSource.substring(startOfTsClass, endOfTsClass);
 
-      this.tsSource = this.tsSource.replace(classDefinition, `${classDefinition}\n  ${inject}`);
+      this.tsSource = this.tsSource.replace(classDefinition, `${classDefinition}\n  ${inject}\n ${webComponents}`);
     }
 
     // transform ts to js

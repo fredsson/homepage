@@ -36,4 +36,10 @@ export class DependencyInjector {
     const deps = (token.inject || []).map(t => this.get(t));
     return new token(...deps);
   }
+
+  public injectWebComponent<T>(token: InjectionToken<T> & {init: (...args: any[]) => void}): void {
+    const deps = (token.inject || []).map(t => this.get(t));
+
+    token.init(deps);
+  }
 }

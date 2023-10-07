@@ -18,4 +18,10 @@ export class DependencyResolver {
     return `public static inject = [${types}];`;
   }
 
+  public resolveWebComponentForHtml(htmlSource: string): string | undefined {
+    const tags = [...htmlSource.matchAll(/app\-[a-zA-Z]*/g)].map(a => `'${a[0].replace('app-','')}'`)
+    const uniqueTags = [...new Set(tags).values()];
+    return `public static webComponents = [${uniqueTags.join(',')}]`;
+  }
+
 }

@@ -47,9 +47,11 @@ async function main(rootPath: string, name: string): Promise<void> {
   const webComponentDirectories = await findAllDirectories(path.join(rootPath, 'components'));
   const webComponents = await Promise.all(webComponentDirectories.map(dirent => WebComponent.load(rootPath, dirent.name)));
 
-  webComponents.forEach(c => {
-    c.transformForBrowser();
-  });
+  const webComponentsEntries = await Promise.all(webComponents.map(async c => {
+    const jsTargetDirectory = path.join('out', name, 'js');
+    await c.transformForBrowser();
+    return await c.saveForBundling(jsTargetDirectory);
+  }));
 
   const bundleEntries = await Promise.all(pageComponents.map(async component => {
     const jsTargetDirectory = path.join('out', name, 'js');
@@ -61,7 +63,7 @@ async function main(rootPath: string, name: string): Promise<void> {
     bundle: true,
     splitting: true,
     chunkNames: 'chunks/[hash].[name]',
-    entryPoints: bundleEntries.filter(isDefined),
+    entryPoints: bundleEntries.concat(webComponentsEntries).filter(isDefined),
     outdir: `out/${name}/bundle`,
     format: 'esm'
   });
