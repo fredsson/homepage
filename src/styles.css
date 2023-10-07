@@ -15,14 +15,21 @@
 }
 
 :root {
-  --text-color: #FFFFFF;
-  --background-color: #08051C;
-  --primary-color: #6A2C70;
-  --primary-color-light: #B83B5E;
-  --primary-btn: #1976d2;
+  --text-color: #F8F8F9; /*#F8F8F9 - White lilac */
+  --background-color: #1D1D1D; /*#1D1D1 - black */
+  --nav-color: #2272FF; /*#2272FF - neon blue */
+  --nav-color-highlight: #01257D; /*#01257D - navy blue */
+  --primary-btn: #2272FF; /*#2272FF - neon blue */
   --primary-btn-light: #1565c0;
 
 }
+
+
+/*#2272FF - neon blue */
+/*#01257D - navy blue */
+/*#00FFFF - electric blue */
+/*#111439 - dark blue */
+
 
 body {
   padding: 0;
@@ -43,6 +50,11 @@ b, h1, h2, h3, h4, h5, h6, strong, th {
   font-weight: normal;
 }
 
+p {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
 .text-content {
   color: var(--text-color);
   font-size: 20px;
@@ -50,7 +62,7 @@ b, h1, h2, h3, h4, h5, h6, strong, th {
   font-weight: normal;
 }
 
-button {
+/*button {
   font-family: Roboto, Helvetica, Arial, sans-serif;
   font-size: 16px;
   font-weight: 700;
@@ -66,6 +78,29 @@ button {
 
 button:hover {
   box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12);
+}*/
+
+button {
+  color: var(--text-color);
+  background-color: transparent;
+  border: 1px solid var(--primary-btn);
+
+  position: relative;
+  display: inline-block;
+  margin: 1em;
+  padding: 1em 2em;
+  border-radius: 30px;
+  text-align: center;
+  white-space: nowrap;
+  cursor: pointer;
+
+  font-size: 14px;
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+  font-weight: 700;
+}
+
+button:hover {
+  background-color: var(--primary-btn-light);
 }
 
 [hidden] {

@@ -17,7 +17,7 @@
 
   padding: 0.2rem;
 
-  background-color: var(--primary-color);
+  background-color: var(--nav-color);
 
   margin-top: auto;
   margin-bottom: auto;
@@ -35,7 +35,7 @@
 }
 
 .main-nav__item {
-  color: var(--primary-btn);
+  color: var(--nav-color);
   opacity: 0;
   display: flex;
   justify-content: center;
@@ -50,7 +50,7 @@
 }
 
 .main-nav__item:hover {
-  background-color: var(--primary-btn);
+  background-color: var(--nav-color-highlight);
 }
 
 .nav-icon {
@@ -60,7 +60,7 @@
 }
 
 .nav-icon > svg {
-  color: var(--primary-btn);
+  color: var(--nav-color);
 }
 
 @media screen and (min-width: 1920px) {
