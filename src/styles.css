@@ -1,0 +1,108 @@
+@font-face {
+  font-family: 'Roboto';
+  src: url('assets/fonts/roboto-regular-webfont.woff2') format('woff2'),
+       url('assets/fonts/roboto-regular-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('assets/fonts/roboto-bold-webfont.woff2') format('woff2'),
+       url('assets/fonts/roboto-bold-webfont.woff') format('woff');
+  font-weight: 700;
+  font-style:normal;
+}
+
+:root {
+  --text-color: #F8F8F9; /*#F8F8F9 - White lilac */
+  --background-color: #1D1D1D; /*#1D1D1 - black */
+  --nav-color: #2272FF; /*#2272FF - neon blue */
+  --nav-color-highlight: #01257D; /*#01257D - navy blue */
+  --primary-btn: #2272FF; /*#2272FF - neon blue */
+  --primary-btn-light: #1565c0;
+
+}
+
+
+/*#2272FF - neon blue */
+/*#01257D - navy blue */
+/*#00FFFF - electric blue */
+/*#111439 - dark blue */
+
+
+body {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+*, ::before, ::after {
+  box-sizing: inherit;
+}
+
+i, cite, em, var, dfn, address {
+  font-style: normal;
+}
+
+b, h1, h2, h3, h4, h5, h6, strong, th {
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+  font-weight: normal;
+}
+
+p {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.text-content {
+  color: var(--text-color);
+  font-size: 20px;
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+  font-weight: normal;
+}
+
+/*button {
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-color);
+  background-color: var(--primary-btn);
+  border: 0;
+  padding: 0.5rem;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0,0.12);
+}
+
+button:hover {
+  box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12);
+}*/
+
+button {
+  color: var(--text-color);
+  background-color: transparent;
+  border: 1px solid var(--primary-btn);
+
+  position: relative;
+  display: inline-block;
+  margin: 1em;
+  padding: 1em 2em;
+  border-radius: 30px;
+  text-align: center;
+  white-space: nowrap;
+  cursor: pointer;
+
+  font-size: 14px;
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+  font-weight: 700;
+}
+
+button:hover {
+  background-color: var(--primary-btn-light);
+}
+
+[hidden] {
+  display: none !important;
+}

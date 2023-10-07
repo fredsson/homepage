@@ -1,0 +1,33 @@
+{
+  "name": "freddson-home",
+  "version": "0.0.0",
+  "description": "fredsson.dev homepage using essencejs framework",
+  "scripts": {
+    "watch": "npx http-server dist -c-1 -p 4200",
+    "cli:build": "npx esbuild src/essence/cli.ts --bundle --outfile=out/essence/cli.js --platform=node --external:esbuild --external:css-tree",
+    "essence:build": "npx esbuild src/essence/essence.ts --bundle --outfile=out/essence/essence.js --platform=browser --format=esm",
+    "test:generate": "node src/essence/tools/generate-tests.js",
+    "test": "npm run test:generate && esbuild dist/test/test-entry.js --bundle --outfile=dist/test/main.js && jasmine dist/test/main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fredsson/homepage.git"
+  },
+  "author": "Fredrik Andersson",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/fredsson/homepage/issues"
+  },
+  "homepage": "https://github.com/fredsson/homepage#readme",
+  "devDependencies": {
+    "@types/css-tree": "^2.3.1",
+    "@types/jasmine": "^4.3.1",
+    "@types/node": "^18.14.6",
+    "css-tree": "^2.3.1",
+    "esbuild": "^0.17.11",
+    "glob": "^9.2.1",
+    "http-server": "^14.1.1",
+    "jasmine": "^4.5.0",
+    "typescript": "^4.9.5"
+  }
+}

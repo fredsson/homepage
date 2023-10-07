@@ -1,0 +1,11 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "shell",
+			"command": "npm run test:generate ${file} && npx esbuild dist/test/test-entry.js --bundle --outfile=dist/test/main.js && npx jasmine dist/test/main.js",
+			"label": "Run this test file",
+			"problemMatcher": []
+		}
+	]
+}

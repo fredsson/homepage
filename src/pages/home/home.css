@@ -1,0 +1,56 @@
+
+.content {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: row;
+  background-color: var(--background-color);
+}
+
+.main-content {
+  margin-top: 1rem;
+  margin-left: 10rem;
+  display:flex;
+  flex-direction: column;
+  row-gap: 2rem;
+  z-index: 2;
+  flex-grow: 1;
+}
+
+.content-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  max-width: 60rem;
+}
+
+.content-container + .content-container {
+  margin-top: 10rem;
+}
+
+.content-container--right {
+  margin-left: 40rem;
+}
+
+.icon-content {
+  position:absolute;
+  top: -20px;
+  left: 0px;
+  transition: left 0.3s;
+  width: 350px;
+  height: 350px;
+  z-index: -1;
+}
+
+.content-container:hover > .learn-more-btn {
+  opacity: 1;
+}
+
+.learn-more-btn {
+  opacity: 1;
+  margin-right: 5rem;
+  align-self: end;
+}
+
+.learn-more-btn:hover {
+  background-color: var(--primary-btn-light);
+}
